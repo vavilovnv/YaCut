@@ -14,13 +14,13 @@ def create_short_url_api():
     if not data:
         raise InvalidAPIUsage('Отсутствует тело запроса')
     if 'url' not in data:
-        raise InvalidAPIUsage('Поле url является обязательным')
-    if data.get('custom_id', None) is None:
+        raise InvalidAPIUsage('"url" является обязательным полем!')
+    if not data.get('custom_id'):
         data['custom_id'] = get_unique_short_id()
     elif URLMap.query.filter_by(short=data['custom_id']).first():
-        raise InvalidAPIUsage('Такой custom_id уже занят')
+        raise InvalidAPIUsage('Имя "py" уже занято.')
     elif not match(SHORT_ID_PATTERN, data['custom_id']):
-        raise InvalidAPIUsage('Неверный custom_id')
+        raise InvalidAPIUsage('Указано недопустимое имя для короткой ссылки')
     obj = URLMap()
     obj.from_dict(data)
     db.session.add(obj)

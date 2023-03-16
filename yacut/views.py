@@ -1,4 +1,4 @@
-from flask import flash, redirect, render_template, request, url_for
+from flask import flash, redirect, render_template, request
 
 from . import app, db
 from .models import URLMap
@@ -12,7 +12,7 @@ def index_view():
     if form.validate_on_submit():
         short_url = form.custom_id.data
         if short_url and URLMap.query.filter_by(short=short_url).first() is not None:
-            form.custom_id.errors = ['Короткая ссылка уже зарегистрирована.']
+            form.custom_id.errors = [f'Имя {short_url} уже занято!']
             return render_template('yacut.html', form=form)
         if not short_url:
             short_url = get_unique_short_id()
