@@ -1,11 +1,12 @@
 from flask_wtf import FlaskForm
 from wtforms import SubmitField, URLField
-from wtforms.validators import DataRequired, Length, Optional, Regexp, URL
+from wtforms.validators import URL, DataRequired, Length, Optional, Regexp
 
 from .utils import SHORT_ID_PATTERN
 
 
 class YaCutForm(FlaskForm):
+    """Основные параметры формы главной страницы сервиса."""
     original_link = URLField(
         'Длинная ссылка',
         validators=[

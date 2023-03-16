@@ -6,6 +6,7 @@ from . import db
 
 
 class URLMap(db.Model):
+    """Модель соответствия оригинальной и короткой ссылок."""
     id = db.Column(db.Integer, primary_key=True)
     original = db.Column(db.String, nullable=False)
     short = db.Column(db.String(96), unique=True, nullable=False)
@@ -14,7 +15,10 @@ class URLMap(db.Model):
     def to_dict(self):
         return dict(
             url=self.original,
-            short_link=url_for('short_url_view', short=self.short, _external=True)
+            short_link=url_for(
+                'short_url_view',
+                short=self.short,
+                _external=True)
         )
 
     def from_dict(self, data):
