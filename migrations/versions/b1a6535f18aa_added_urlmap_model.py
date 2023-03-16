@@ -21,7 +21,7 @@ def upgrade():
     op.create_table('url_map',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('original', sa.String(), nullable=False),
-    sa.Column('short', sa.String(length=16), nullable=False),
+    sa.Column('short', sa.String(length=96), nullable=False),
     sa.Column('timestamp', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('short')
