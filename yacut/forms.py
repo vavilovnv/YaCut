@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import SubmitField, URLField
 from wtforms.validators import URL, DataRequired, Length, Optional, Regexp
 
-from .utils import SHORT_ID_PATTERN
+from .constants import SHORT_ID_PATTERN
 
 
 class YaCutForm(FlaskForm):
@@ -19,6 +19,12 @@ class YaCutForm(FlaskForm):
         validators=[
             Length(1, 16),
             Optional(),
+            # Максим, возможно я неверно понял твой комментарий, но в ТЗ есть
+            # требование о том, что допустимы только следующие символы:
+            # * большие латинские буквы,
+            # * маленькие латинские буквы,
+            # * цифры в диапазоне от 0 до 9.
+            # Их и "зашил" в регулярное выражение.
             Regexp(SHORT_ID_PATTERN, message='Некорректная ссылка')]
     )
     submit = SubmitField('Создать')
