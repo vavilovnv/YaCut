@@ -47,7 +47,7 @@ flask db upgrade
 flask run
 ```
 
-![Watchers Badge](https://img.shields.io/github/watchers/vavilovnv/yacut.svg])
+![Watchers Badge](https://img.shields.io/github/watchers/vavilovnv/YaCut.svg])
 
 <!-- MARKDOWN BADGES & URLs -->
 [Python-badge]: https://img.shields.io/badge/python%203.9+-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54
