@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import SubmitField, URLField
 from wtforms.validators import URL, DataRequired, Length, Optional, Regexp
 
-from .constants import SHORT_ID_PATTERN
+from .utils import SHORT_ID_PATTERN
 
 
 class YaCutForm(FlaskForm):

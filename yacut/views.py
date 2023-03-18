@@ -1,15 +1,15 @@
 from urllib.parse import urljoin
 
-from flask import flash, redirect, render_template, request
+from flask import Response, flash, redirect, render_template, request
 
-from . import app, db
-from .constants import YACUT_TEMPLATE
+from . import app
+from .utils import YACUT_TEMPLATE, save_data
 from .forms import YaCutForm
 from .models import URLMap
 
 
 @app.route('/', methods=['GET', 'POST'])
-def index_view():
+def index_view() -> str:
     """Функция обрабатывает запросы к основной странице сервиса."""
     form = YaCutForm()
     if not form.validate_on_submit():
@@ -20,12 +20,9 @@ def index_view():
     ).first() is not None:
         form.custom_id.errors = [f'Имя {short_url} уже занято!']
         return render_template(YACUT_TEMPLATE, form=form)
-    obj = URLMap(
-        original=form.original_link.data,
-        short=short_url
-    )
-    db.session.add(obj)
-    db.session.commit()
+    obj = URLMap()
+    obj.shorten(form.original_link.data, short_url)
+    save_data(obj)
     short_link = urljoin(request.base_url, obj.short)
     flash(f'Ваша новая ссылка готова: '
           f'<a href="{short_link}">{short_link}</a>')
@@ -33,7 +30,7 @@ def index_view():
 
 
 @app.route('/<string:short>', methods=['GET'])
-def short_url_view(short):
+def short_url_view(short: str) -> Response:
     """Функция перенаправляет по данным короткой ссылки на оригинальную
     страницу."""
     return redirect(

@@ -15,13 +15,15 @@ class URLMap(db.Model):
     short = db.Column(db.String(16), unique=True, nullable=False, index=True)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
-    def __init__(self, original: str = '', short: str = ''):
-        self.original = original
-        if not short:
-            short = self.get_unique_short_id()
-        self.short = short
+    @staticmethod
+    def get_unique_short_id() -> str:
+        """Функция создает short_id для короткой ссылки."""
+        while True:
+            short_id = ShortUUID().random(length=SHORT_ID_LENGTH)
+            if not URLMap.query.filter_by(short=short_id).first():
+                return short_id
 
-    def to_dict(self):
+    def to_dict(self) -> dict[str, str]:
         return dict(
             url=self.original,
             short_link=url_for(
@@ -30,10 +32,12 @@ class URLMap(db.Model):
                 _external=True)
         )
 
-    @staticmethod
-    def get_unique_short_id():
-        """Функция создает short_id для короткой ссылки."""
-        while True:
-            short_id = ShortUUID().random(length=SHORT_ID_LENGTH)
-            if not URLMap.query.filter_by(short=short_id).first():
-                return short_id
+    def from_dict(self, data: dict[str, str]) -> None:
+        self.original = data['url']
+        self.short = data['custom_id']
+
+    def shorten(self, original_link: str, short_id: str) -> None:
+        self.original = original_link
+        if not short_id:
+            short_id = self.get_unique_short_id()
+        self.short = short_id
